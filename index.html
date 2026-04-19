@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Photobooth – Happy Graduation SMKS 1 Barunawati 2025/2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ============================================================
+       RESET & ROOT VARIABLES
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:        #C9A84C;
+      --gold-light:  #E8C96A;
+      --gold-dim:    #8B6914;
+      --black:       #0A0A0A;
+      --navy:        #0B1B3A;
+      --navy-mid:    #132244;
+      --white:       #F8F5EE;
+      --white-pure:  #FFFFFF;
+      --glass:       rgba(255,255,255,0.06);
+      --glass-border:rgba(201,168,76,0.25);
+      --shadow-gold: 0 0 30px rgba(201,168,76,0.25);
+      --font-serif:  'Playfair Display', Georgia, serif;
+      --font-sans:   'Poppins', sans-serif;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: var(--navy);
+      color: var(--white);
+      font-family: var(--font-sans);
+    }
+
+    /* ============================================================
+       BACKGROUND TEXTURE
+    ============================================================ */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 15% 50%, rgba(11,27,58,0.95) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 80% at 85% 50%, rgba(11,27,58,0.9) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 50% at 50% 0%,  rgba(201,168,76,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 50% 100%,rgba(201,168,76,0.05) 0%, transparent 60%),
+        linear-gradient(135deg, #0A1428 0%, #0B1B3A 50%, #0A1428 100%);
+    }
+    body::after {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        repeating-linear-gradient(0deg,   transparent, transparent 59px, rgba(201,168,76,0.04) 60px),
+        repeating-linear-gradient(90deg,  transparent, transparent 59px, rgba(201,168,76,0.04) 60px);
+      pointer-events: none;
+    }
+
+    /* ============================================================
+       LAYOUT WRAPPER
+    ============================================================ */
+    #app {
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column;
+      width: 100vw; height: 100vh;
+      padding: 0 20px 12px;
+    }
+
+    /* ============================================================
+       HEADER
+    ============================================================ */
+    #header {
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      gap: 18px;
+      padding: 10px 0 8px;
+      border-bottom: 1px solid var(--glass-border);
+      position: relative;
+    }
+    #header .ornament {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+    #header .title-block { text-align: center; line-height: 1.2; }
+    #header .title-block .subtitle {
+      font-family: var(--font-sans);
+      font-size: 9px; font-weight: 500; letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2px;
+    }
+    #header .title-block h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(13px, 1.5vw, 20px);
+      font-weight: 700;
+      color: var(--white-pure);
+      white-space: nowrap;
+    }
+    #header .title-block .meta {
+      font-size: 9px; font-weight: 300; letter-spacing: 1.5px;
+      color: rgba(248,245,238,0.55);
+      margin-top: 1px;
+    }
+
+    /* ============================================================
+       MAIN CONTENT (2 COLUMNS)
+    ============================================================ */
+    #main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 18px;
+      min-height: 0;
+      padding-top: 14px;
+    }
+
+    /* ---- LEFT PANEL ---- */
+    #left-panel {
+      display: flex; flex-direction: column; gap: 12px;
+      min-height: 0;
+    }
+
+    .panel-label {
+      font-size: 9px; font-weight: 600; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--gold);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .panel-label::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, var(--gold-dim), transparent);
+    }
+
+    /* Camera preview area */
+    #camera-wrap {
+      flex: 1;
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #050d1e;
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow-gold), inset 0 0 60px rgba(0,0,0,0.5);
+      min-height: 0;
+    }
+    #video {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1); /* mirror */
+      display: block;
+    }
+    /* Frame overlay on video */
+    #frame-overlay {
+      position: absolute; inset: 0;
+      pointer-events: none;
+    }
+    /* Corner decorations */
+    #frame-overlay::before, #frame-overlay::after,
+    #camera-wrap::before, #camera-wrap::after {
+      content: '';
+      position: absolute;
+      width: 28px; height: 28px;
+      border-color: var(--gold);
+      border-style: solid;
+      z-index: 5;
+    }
+    #frame-overlay::before  { top:10px;  left:10px;  border-width:2px 0 0 2px; }
+    #frame-overlay::after   { top:10px;  right:10px; border-width:2px 2px 0 0; }
+    #camera-wrap::before    { bottom:10px; left:10px;  border-width:0 0 2px 2px; }
+    #camera-wrap::after     { bottom:10px; right:10px; border-width:0 2px 2px 0; }
+
+    /* Countdown overlay */
+    #countdown-overlay {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10;
+      pointer-events: none;
+      opacity: 0;
+    }
+    #countdown-overlay.active { opacity: 1; }
+    #countdown-num {
+      font-family: var(--font-serif);
+      font-size: clamp(80px, 15vw, 160px);
+      font-weight: 700;
+      color: var(--gold-light);
+      text-shadow: 0 0 60px rgba(201,168,76,0.8), 0 4px 20px rgba(0,0,0,0.8);
+      animation: pulse-num 0.8s ease-in-out infinite alternate;
+    }
+    @keyframes pulse-num {
+      from { transform: scale(1); opacity:1; }
+      to   { transform: scale(1.15); opacity:0.85; }
+    }
+
+    /* Flash effect */
+    #flash {
+      position: absolute; inset: 0; z-index: 20;
+      background: white;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.05s;
+    }
+    #flash.active { opacity: 1; }
+
+    /* Photo strip mini preview under camera */
+    #shots-strip {
+      display: flex; gap: 10px;
+      height: 72px; flex-shrink: 0;
+    }
+    .shot-slot {
+      flex: 1;
+      border-radius: 8px;
+      border: 1px dashed rgba(201,168,76,0.3);
+      background: rgba(0,0,0,0.3);
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      transition: border-color 0.3s;
+    }
+    .shot-slot.filled  { border-style: solid; border-color: var(--gold); }
+    .shot-slot img { width:100%; height:100%; object-fit:cover; }
+    .shot-slot .slot-num {
+      position: absolute;
+      font-size: 9px; font-weight: 600; letter-spacing: 1px;
+      color: rgba(201,168,76,0.4);
+    }
+    .shot-slot.filled .slot-num { display: none; }
+    .shot-slot .checkmark {
+      position: absolute; bottom:4px; right:6px;
+      color: var(--gold); font-size: 12px; opacity:0;
+      transition: opacity 0.3s;
+    }
+    .shot-slot.filled .checkmark { opacity:1; }
+
+    /* ---- BUTTONS ---- */
+    #btn-row {
+      display: flex; gap: 10px; flex-shrink: 0;
+    }
+    .btn {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 10px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--glass-border);
+      background: var(--glass);
+      color: var(--white);
+      font-family: var(--font-sans);
+      font-size: 11px; font-weight: 500; letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.2s;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      white-space: nowrap;
+    }
+    .btn svg { flex-shrink: 0; }
+    .btn:hover:not(:disabled) {
+      background: rgba(201,168,76,0.12);
+      border-color: var(--gold);
+      color: var(--gold-light);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(201,168,76,0.15);
+    }
+    .btn:active:not(:disabled) { transform: translateY(0); }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn.primary {
+      background: linear-gradient(135deg, #C9A84C 0%, #8B6914 100%);
+      border-color: var(--gold-light);
+      color: #0A0A0A;
+      font-weight: 600;
+    }
+    .btn.primary:hover:not(:disabled) {
+      background: linear-gradient(135deg, #E8C96A 0%, #C9A84C 100%);
+      color: #0A0A0A;
+    }
+    .btn.danger {
+      border-color: rgba(220,80,80,0.4);
+    }
+    .btn.danger:hover:not(:disabled) {
+      background: rgba(220,80,80,0.12);
+      border-color: rgba(220,80,80,0.8);
+      color: #ff8080;
+    }
+
+    /* ---- RIGHT PANEL ---- */
+    #right-panel {
+      display: flex; flex-direction: column; gap: 12px;
+      min-height: 0;
+    }
+
+    #result-wrap {
+      flex: 1;
+      border-radius: 12px;
+      border: 1px solid var(--glass-border);
+      background: rgba(0,0,0,0.35);
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      box-shadow: var(--shadow-gold);
+      min-height: 0;
+    }
+    #result-placeholder {
+      text-align: center;
+      color: rgba(201,168,76,0.35);
+      pointer-events: none;
+    }
+    #result-placeholder svg { opacity: 0.4; margin-bottom: 10px; }
+    #result-placeholder p {
+      font-size: 11px; font-weight: 300; letter-spacing: 1px;
+      line-height: 1.6;
+    }
+    #result-canvas {
+      max-width: 100%; max-height: 100%;
+      object-fit: contain;
+      display: none;
+      border-radius: 4px;
+    }
+
+    /* Loading spinner over result */
+    #loading-overlay {
+      position: absolute; inset: 0;
+      display: none; align-items: center; justify-content: center;
+      flex-direction: column; gap: 12px;
+      background: rgba(10,20,40,0.8);
+      z-index: 5;
+      border-radius: 12px;
+    }
+    #loading-overlay.active { display: flex; }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid rgba(201,168,76,0.2);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loading-overlay p {
+      font-size: 11px; font-weight: 300; letter-spacing: 2px;
+      color: var(--gold);
+    }
+
+    /* Right action buttons */
+    #right-btns {
+      display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;
+    }
+    #right-btns .btn { flex: none; width: 100%; }
+
+    /* ============================================================
+       TOAST NOTIFICATIONS
+    ============================================================ */
+    #toast-container {
+      position: fixed; top: 16px; right: 16px; z-index: 1000;
+      display: flex; flex-direction: column; gap: 8px;
+      pointer-events: none;
+    }
+    .toast {
+      padding: 10px 18px;
+      border-radius: 8px;
+      background: var(--navy-mid);
+      border-left: 3px solid var(--gold);
+      font-size: 12px; font-weight: 400;
+      color: var(--white);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      animation: toast-in 0.3s ease, toast-out 0.3s ease 2.5s forwards;
+      max-width: 280px;
+    }
+    .toast.success { border-left-color: #4CAF50; }
+    .toast.error   { border-left-color: #f44336; }
+    @keyframes toast-in {
+      from { opacity:0; transform: translateX(30px); }
+      to   { opacity:1; transform: translateX(0); }
+    }
+    @keyframes toast-out {
+      from { opacity:1; transform: translateX(0); }
+      to   { opacity:0; transform: translateX(30px); }
+    }
+
+    /* ============================================================
+       STATUS BAR
+    ============================================================ */
+    #status-bar {
+      flex-shrink: 0;
+      text-align: center;
+      font-size: 10px; font-weight: 300; letter-spacing: 2px;
+      color: rgba(201,168,76,0.5);
+      padding-top: 4px;
+    }
+
+    /* ============================================================
+       CAMERA PERMISSION SCREEN
+    ============================================================ */
+    #permission-screen {
+      position: fixed; inset: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 20px;
+      background: var(--navy);
+    }
+    #permission-screen h2 {
+      font-family: var(--font-serif);
+      font-size: 24px; color: var(--gold-light);
+    }
+    #permission-screen p {
+      font-size: 13px; font-weight: 300; color: rgba(248,245,238,0.6);
+      text-align: center; max-width: 320px; line-height: 1.7;
+    }
+    #permission-screen.hidden { display: none; }
+
+    /* Fade-in animation for app */
+    #app { animation: fade-in 0.6s ease both; }
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     PERMISSION SCREEN
+============================================================ -->
+<div id="permission-screen">
+  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5">
+    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+    <circle cx="12" cy="13" r="4"/>
+  </svg>
+  <h2>Izinkan Akses Kamera</h2>
+  <p>Photobooth memerlukan akses ke kamera Anda untuk mengambil foto. Klik tombol di bawah dan izinkan akses kamera di browser Anda.</p>
+  <button class="btn primary" id="btn-request-cam" style="flex:none;width:200px;padding:14px;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+      <circle cx="12" cy="13" r="4"/>
+    </svg>
+    Buka Kamera
+  </button>
+</div>
+
+<!-- ============================================================
+     TOAST CONTAINER
+============================================================ -->
+<div id="toast-container"></div>
+
+<!-- ============================================================
+     MAIN APP
+============================================================ -->
+<div id="app">
+
+  <!-- HEADER -->
+  <div id="header">
+    <div class="ornament"></div>
+    <div class="title-block">
+      <div class="subtitle">✦ Photobooth Wisuda ✦</div>
+      <h1>Happy Graduation – SMKS 1 BARUNAWATI</h1>
+      <div class="meta">9 Mei 2026 &nbsp;|&nbsp; Menara Peninsula Hotel &nbsp;|&nbsp; Tahun Ajaran 2025/2026</div>
+    </div>
+    <div class="ornament"></div>
+  </div>
+
+  <!-- MAIN 2-COLUMN -->
+  <div id="main">
+
+    <!-- LEFT: CAMERA -->
+    <div id="left-panel">
+      <div class="panel-label">Kamera Preview</div>
+
+      <div id="camera-wrap">
+        <video id="video" autoplay playsinline></video>
+        <div id="frame-overlay"></div>
+        <div id="countdown-overlay">
+          <span id="countdown-num">3</span>
+        </div>
+        <div id="flash"></div>
+      </div>
+
+      <!-- Shot thumbnails -->
+      <div id="shots-strip">
+        <div class="shot-slot" id="slot-0"><span class="slot-num">FOTO 1</span><span class="checkmark">✦</span></div>
+        <div class="shot-slot" id="slot-1"><span class="slot-num">FOTO 2</span><span class="checkmark">✦</span></div>
+        <div class="shot-slot" id="slot-2"><span class="slot-num">FOTO 3</span><span class="checkmark">✦</span></div>
+      </div>
+
+      <!-- Action buttons -->
+      <div id="btn-row">
+        <button class="btn primary" id="btn-shoot">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+          Ambil Foto
+        </button>
+        <button class="btn" id="btn-preview" disabled>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          Preview
+        </button>
+        <button class="btn danger" id="btn-reset">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="1 4 1 10 7 10"/>
+            <path d="M3.51 15a9 9 0 1 0 .49-3.51"/>
+          </svg>
+          Ulangi
+        </button>
+      </div>
+    </div>
+
+    <!-- RIGHT: RESULT -->
+    <div id="right-panel">
+      <div class="panel-label">Hasil Frame</div>
+
+      <div id="result-wrap">
+        <div id="result-placeholder">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+          <p>Hasil foto akan<br/>tampil di sini</p>
+        </div>
+        <canvas id="result-canvas"></canvas>
+        <div id="loading-overlay">
+          <div class="spinner"></div>
+          <p>Memproses foto...</p>
+        </div>
+      </div>
+
+      <!-- Right-side buttons -->
+      <div id="right-btns">
+        <button class="btn" id="btn-download" disabled>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Download PNG
+        </button>
+        <button class="btn" id="btn-drive" disabled>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+          </svg>
+          Upload Google Drive
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATUS BAR -->
+  <div id="status-bar" id="status-bar">Siap mengambil foto · SMKS 1 BARUNAWATI 2025/2026</div>
+
+</div><!-- /#app -->
+
+<!-- Hidden canvas for each shot capture -->
+<canvas id="capture-canvas" style="display:none;"></canvas>
+
+<script>
+/* ================================================================
+   CONFIGURATION
+================================================================ */
+const CONFIG = {
+  EVENT_NAME:   'Happy Graduation',
+  SCHOOL:       'SMKS 1 BARUNAWATI',
+  YEAR:         '2025/2026',
+  DATE_VENUE:   '9 Mei 2026  ·  Menara Peninsula Hotel',
+  WATERMARK:    'photobooth.smks1barunawati',
+
+  // ---- Google Drive / Apps Script Upload Endpoint ----
+  // Ganti URL berikut dengan endpoint Google Apps Script Anda.
+  // Cara: buat Apps Script baru → Deploy as Web App → salin URL-nya.
+  DRIVE_ENDPOINT: 'https://script.google.com/macros/s/AKfycbzZ5BRlR5C8PpXHoQgTD7XqmXDIAMfTvdsMMAMqZ_4mjKJEJyJnZrvqNGWs9Fyfuagm/exec',
+
+  // Countdown detik sebelum tiap foto
+  COUNTDOWN_SEC: 5	,
+
+  // Jumlah foto dalam satu sesi
+  PHOTO_COUNT: 3,
+
+  // Lebar & tinggi canvas per foto (untuk output HD)
+  PHOTO_W: 900,
+  PHOTO_H: 675,
+
+  // Warna tema untuk overlay teks di frame
+  GOLD: '#C9A84C',
+  NAVY: '#0B1B3A',
+};
+
+/* ================================================================
+   STATE
+================================================================ */
+const state = {
+  stream:      null,
+  shots:       [],       // array of ImageData/dataURL
+  isCapturing: false,
+  resultBlob:  null,
+};
+
+/* ================================================================
+   DOM REFS
+================================================================ */
+const video          = document.getElementById('video');
+const capCanvas      = document.getElementById('capture-canvas');
+const capCtx         = capCanvas.getContext('2d');
+const resultCanvas   = document.getElementById('result-canvas');
+const resultCtx      = resultCanvas.getContext('2d');
+const countdownOvl   = document.getElementById('countdown-overlay');
+const countdownNum   = document.getElementById('countdown-num');
+const flashEl        = document.getElementById('flash');
+const loadingOvl     = document.getElementById('loading-overlay');
+const resultPH       = document.getElementById('result-placeholder');
+const statusBar      = document.getElementById('status-bar');
+const permScreen     = document.getElementById('permission-screen');
+const toastCont      = document.getElementById('toast-container');
+
+const btnShoot    = document.getElementById('btn-shoot');
+const btnPreview  = document.getElementById('btn-preview');
+const btnReset    = document.getElementById('btn-reset');
+const btnDownload = document.getElementById('btn-download');
+const btnDrive    = document.getElementById('btn-drive');
+const btnReqCam   = document.getElementById('btn-request-cam');
+
+/* ================================================================
+   SHUTTER SOUND (Web Audio API – synthesized click)
+================================================================ */
+function playShutter() {
+  try {
+    const ctx  = new (window.AudioContext || window.webkitAudioContext)();
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(800, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.08);
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.12);
+  } catch(e) { /* silent fail */ }
+}
+
+/* ================================================================
+   TOAST NOTIFICATIONS
+================================================================ */
+function showToast(msg, type = 'info') {
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  toastCont.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+/* ================================================================
+   SET STATUS
+================================================================ */
+function setStatus(msg) {
+  statusBar.textContent = msg;
+}
+
+/* ================================================================
+   CAMERA INIT
+================================================================ */
+async function initCamera() {
+  try {
+    state.stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
+      audio: false,
+    });
+    video.srcObject = state.stream;
+    permScreen.classList.add('hidden');
+    setStatus('Kamera aktif · Siap mengambil foto');
+    showToast('Kamera berhasil diaktifkan ✦', 'success');
+  } catch(err) {
+    showToast('Gagal mengakses kamera: ' + err.message, 'error');
+    setStatus('Kamera tidak tersedia – periksa izin browser Anda');
+  }
+}
+
+btnReqCam.addEventListener('click', initCamera);
+
+/* ================================================================
+   COUNTDOWN HELPER
+================================================================ */
+function countdown(sec) {
+  return new Promise(resolve => {
+    countdownOvl.classList.add('active');
+    let n = sec;
+    countdownNum.textContent = n;
+    const iv = setInterval(() => {
+      n--;
+      if (n <= 0) {
+        clearInterval(iv);
+        countdownOvl.classList.remove('active');
+        resolve();
+      } else {
+        countdownNum.textContent = n;
+      }
+    }, 1000);
+  });
+}
+
+/* ================================================================
+   FLASH EFFECT
+================================================================ */
+function doFlash() {
+  flashEl.classList.add('active');
+  setTimeout(() => flashEl.classList.remove('active'), 120);
+}
+
+/* ================================================================
+   CAPTURE ONE PHOTO
+================================================================ */
+function capturePhoto() {
+  capCanvas.width  = CONFIG.PHOTO_W;
+  capCanvas.height = CONFIG.PHOTO_H;
+  // Draw mirrored (video is CSS-mirrored; canvas must mirror too)
+  capCtx.save();
+  capCtx.translate(CONFIG.PHOTO_W, 0);
+  capCtx.scale(-1, 1);
+  capCtx.drawImage(video, 0, 0, CONFIG.PHOTO_W, CONFIG.PHOTO_H);
+  capCtx.restore();
+  return capCanvas.toDataURL('image/png');
+}
+
+/* ================================================================
+   UPDATE SLOT THUMBNAIL
+================================================================ */
+function updateSlot(index, dataURL) {
+  const slot = document.getElementById(`slot-${index}`);
+  slot.classList.add('filled');
+  const img = document.createElement('img');
+  img.src = dataURL;
+  // Remove old img if any
+  const old = slot.querySelector('img');
+  if (old) old.remove();
+  slot.insertBefore(img, slot.querySelector('.slot-num'));
+}
+
+/* ================================================================
+   CAPTURE SESSION (3 photos with countdown)
+================================================================ */
+async function startCapture() {
+  if (state.isCapturing) return;
+  if (!state.stream) { showToast('Kamera belum aktif!', 'error'); return; }
+
+  state.isCapturing = true;
+  state.shots = [];
+  btnShoot.disabled = true;
+  btnPreview.disabled = true;
+
+  // Clear slots
+  for (let i = 0; i < CONFIG.PHOTO_COUNT; i++) {
+    const slot = document.getElementById(`slot-${i}`);
+    slot.classList.remove('filled');
+    const img = slot.querySelector('img');
+    if (img) img.remove();
+  }
+
+  for (let i = 0; i < CONFIG.PHOTO_COUNT; i++) {
+    setStatus(`Bersiap foto ${i + 1} dari ${CONFIG.PHOTO_COUNT}...`);
+    await countdown(CONFIG.COUNTDOWN_SEC);
+    doFlash();
+    playShutter();
+    const dataURL = capturePhoto();
+    state.shots.push(dataURL);
+    updateSlot(i, dataURL);
+    setStatus(`Foto ${i + 1} dari ${CONFIG.PHOTO_COUNT} diambil ✦`);
+    if (i < CONFIG.PHOTO_COUNT - 1) await sleep(600);
+  }
+
+  state.isCapturing = false;
+  btnShoot.disabled = false;
+  btnPreview.disabled = false;
+  setStatus('Semua foto diambil · Klik "Preview" untuk melihat hasil');
+  showToast('3 foto berhasil diambil! ✦', 'success');
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+/* ================================================================
+   RENDER PHOTOSTRIP CANVAS
+   Layout: vertical strip  — header | photo1 | divider | photo2 | divider | photo3 | footer
+================================================================ */
+async function renderPhotostrip() {
+  if (state.shots.length < CONFIG.PHOTO_COUNT) {
+    showToast('Ambil foto terlebih dahulu!', 'error');
+    return;
+  }
+
+  loadingOvl.classList.add('active');
+  resultPH.style.display = 'none';
+  setStatus('Memproses dan merender frame...');
+
+  await sleep(100); // let UI update
+
+  const PW = CONFIG.PHOTO_W;
+  const PH = CONFIG.PHOTO_H;
+
+  const STRIP_W  = PW + 60;       // photo width + side margin × 2
+  const HEAD_H   = 180;
+  const DIV_H    = 24;
+  const FOOT_H   = 120;
+  const PAD      = 30;            // side padding
+  const STRIP_H  = HEAD_H + CONFIG.PHOTO_COUNT * PH + (CONFIG.PHOTO_COUNT - 1) * DIV_H + FOOT_H + PAD * 2;
+
+  resultCanvas.width  = STRIP_W;
+  resultCanvas.height = STRIP_H;
+  const ctx = resultCtx;
+
+  // ---- Background ----
+  const bg = ctx.createLinearGradient(0, 0, 0, STRIP_H);
+  bg.addColorStop(0,   '#0B1B3A');
+  bg.addColorStop(0.5, '#0F2550');
+  bg.addColorStop(1,   '#0B1B3A');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, STRIP_W, STRIP_H);
+
+  // ---- Gold border frame ----
+  ctx.strokeStyle = CONFIG.GOLD;
+  ctx.lineWidth = 4;
+  ctx.strokeRect(8, 8, STRIP_W - 16, STRIP_H - 16);
+  ctx.lineWidth = 1;
+  ctx.globalAlpha = 0.4;
+  ctx.strokeRect(16, 16, STRIP_W - 32, STRIP_H - 32);
+  ctx.globalAlpha = 1;
+
+  // ---- Corner ornaments ----
+  function drawCorner(x, y, sx, sy) {
+    ctx.strokeStyle = CONFIG.GOLD;
+    ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(x, y + sy * 36); ctx.lineTo(x, y); ctx.lineTo(x + sx * 36, y);
+    ctx.stroke();
+  }
+  drawCorner(24, 24, 1, 1);
+  drawCorner(STRIP_W - 24, 24, -1, 1);
+  drawCorner(24, STRIP_H - 24, 1, -1);
+  drawCorner(STRIP_W - 24, STRIP_H - 24, -1, -1);
+
+  // ---- HEADER ----
+  // Subtitle
+  ctx.fillStyle = CONFIG.GOLD;
+  ctx.font = `500 ${26}px 'Poppins', sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.letterSpacing = '4px';
+  ctx.fillText('✦  HAPPY GRADUATION  ✦', STRIP_W / 2, 68);
+
+  // School name
+  ctx.fillStyle = '#F8F5EE';
+  ctx.font = `700 ${46}px 'Playfair Display', serif`;
+  ctx.fillText('SMKS 1 BARUNAWATI', STRIP_W / 2, 120);
+
+  // Year + divider line
+  ctx.font = `300 ${22}px 'Poppins', sans-serif`;
+  ctx.fillStyle = 'rgba(201,168,76,0.7)';
+  ctx.fillText('Tahun Ajaran 2025/2026', STRIP_W / 2, 155);
+
+  // Gold horizontal line under header
+  const gr = ctx.createLinearGradient(PAD, 0, STRIP_W - PAD, 0);
+  gr.addColorStop(0, 'transparent');
+  gr.addColorStop(0.3, CONFIG.GOLD);
+  gr.addColorStop(0.7, CONFIG.GOLD);
+  gr.addColorStop(1, 'transparent');
+  ctx.strokeStyle = gr;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(PAD, HEAD_H - 12); ctx.lineTo(STRIP_W - PAD, HEAD_H - 12);
+  ctx.stroke();
+
+  // ---- PHOTOS ----
+  const loadImg = src => new Promise((res, rej) => {
+    const img = new Image(); img.onload = () => res(img); img.onerror = rej; img.src = src;
+  });
+
+  const images = await Promise.all(state.shots.map(loadImg));
+
+  for (let i = 0; i < images.length; i++) {
+    const y = HEAD_H + PAD + i * (PH + DIV_H);
+    // Rounded rect clip
+    ctx.save();
+    roundRect(ctx, PAD, y, PW, PH, 8);
+    ctx.clip();
+    ctx.drawImage(images[i], PAD, y, PW, PH);
+    ctx.restore();
+
+    // Photo number badge
+    ctx.fillStyle = CONFIG.GOLD;
+    ctx.font = `600 18px 'Poppins', sans-serif`;
+    ctx.textAlign = 'left';
+    ctx.fillText(`0${i + 1}`, PAD + 14, y + 30);
+    ctx.textAlign = 'center';
+
+    // Gold border on each photo
+    ctx.strokeStyle = CONFIG.GOLD;
+    ctx.lineWidth = 2;
+    roundRect(ctx, PAD, y, PW, PH, 8);
+    ctx.stroke();
+
+    // Divider between photos
+    if (i < images.length - 1) {
+      const dy = y + PH + DIV_H / 2;
+      const dg = ctx.createLinearGradient(PAD, 0, STRIP_W - PAD, 0);
+      dg.addColorStop(0, 'transparent');
+      dg.addColorStop(0.2, 'rgba(201,168,76,0.5)');
+      dg.addColorStop(0.8, 'rgba(201,168,76,0.5)');
+      dg.addColorStop(1, 'transparent');
+      ctx.strokeStyle = dg; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(PAD * 2, dy); ctx.lineTo(STRIP_W - PAD * 2, dy); ctx.stroke();
+
+      // Diamond ornament on divider
+      ctx.fillStyle = CONFIG.GOLD;
+      ctx.beginPath();
+      ctx.moveTo(STRIP_W / 2, dy - 5);
+      ctx.lineTo(STRIP_W / 2 + 5, dy);
+      ctx.lineTo(STRIP_W / 2, dy + 5);
+      ctx.lineTo(STRIP_W / 2 - 5, dy);
+      ctx.closePath();
+      ctx.fill();
+    }
+  }
+
+  // ---- FOOTER ----
+  const footerY = HEAD_H + PAD + CONFIG.PHOTO_COUNT * PH + (CONFIG.PHOTO_COUNT - 1) * DIV_H;
+
+  // Footer gold line
+  ctx.strokeStyle = gr; ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(PAD, footerY + 18); ctx.lineTo(STRIP_W - PAD, footerY + 18);
+  ctx.stroke();
+
+  ctx.fillStyle = CONFIG.GOLD;
+  ctx.font = `300 20px 'Poppins', sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.fillText(CONFIG.DATE_VENUE, STRIP_W / 2, footerY + 58);
+
+  ctx.fillStyle = 'rgba(248,245,238,0.4)';
+  ctx.font = `300 14px 'Poppins', sans-serif`;
+  ctx.fillText(CONFIG.WATERMARK, STRIP_W / 2, footerY + 88);
+
+  // ---- Show result ----
+  resultCanvas.style.display = 'block';
+  loadingOvl.classList.remove('active');
+
+  // Save blob for upload
+  resultCanvas.toBlob(blob => { state.resultBlob = blob; }, 'image/png', 1.0);
+
+  btnDownload.disabled = false;
+  btnDrive.disabled = false;
+  setStatus('Frame siap · Download atau Upload ke Google Drive');
+  showToast('Frame berhasil dirender! ✦', 'success');
+}
+
+/* Helper: rounded rect path */
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y); ctx.arcTo(x + w, y, x + w, y + r, r);
+  ctx.lineTo(x + w, y + h - r); ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+  ctx.lineTo(x + r, y + h); ctx.arcTo(x, y + h, x, y + h - r, r);
+  ctx.lineTo(x, y + r); ctx.arcTo(x, y, x + r, y, r);
+  ctx.closePath();
+}
+
+/* ================================================================
+   DOWNLOAD PNG
+================================================================ */
+function downloadPNG() {
+  if (!state.resultBlob && !resultCanvas.style.display !== 'none') {
+    showToast('Render preview terlebih dahulu!', 'error'); return;
+  }
+  const link = document.createElement('a');
+  link.download = `graduation-smks1barunawati-${Date.now()}.png`;
+  link.href = resultCanvas.toDataURL('image/png', 1.0);
+  link.click();
+  showToast('Foto berhasil diunduh ✦', 'success');
+}
+
+/* ================================================================
+   UPLOAD TO GOOGLE DRIVE (via Apps Script)
+   ----------------------------------------------------------------
+   Cara konfigurasi:
+   1. Buka https://script.google.com → buat project baru
+   2. Paste kode berikut di editor:
+      function doPost(e) {
+        var blob = Utilities.newBlob(Utilities.base64Decode(e.parameter.data), 'image/png', e.parameter.name);
+        DriveApp.getRootFolder().createFile(blob);
+        return ContentService.createTextOutput('OK');
+      }
+   3. Deploy → New Deployment → Web App → Execute as: Me → Access: Anyone
+   4. Salin URL deployment dan tempel ke CONFIG.DRIVE_ENDPOINT di atas
+================================================================ */
+async function uploadToDrive() {
+  if (!resultCanvas.style.display || resultCanvas.style.display === 'none') {
+    showToast('Render preview terlebih dahulu!', 'error'); 
+    return;
+  }
+  
+  if (CONFIG.DRIVE_ENDPOINT.includes('YOUR_DEPLOYMENT_ID')) {
+    showToast('Silakan konfigurasi endpoint Google Drive terlebih dahulu', 'error');
+    return;
+  }
+
+  setStatus('Mengupload ke Google Drive...');
+  btnDrive.disabled = true;
+  showToast('Mengupload foto...', 'info');
+
+  try {
+    // Get base64 data (remove data:image/png;base64, prefix)
+    const base64Data = resultCanvas.toDataURL('image/png', 1.0).split(',')[1];
+    const fileName = `graduation-smks1barunawati-${Date.now()}.png`;
+    
+    // Kirim sebagai JSON, bukan FormData
+    const response = await fetch(CONFIG.DRIVE_ENDPOINT, {
+      method: 'POST',
+      mode: 'no-cors', // Untuk menghindari CORS issues
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        base64Data: base64Data,
+        fileName: fileName,
+        mimeType: 'image/png'
+      })
+    });
+
+    // Karena mode 'no-cors', kita tidak bisa membaca response
+    // Jadi kita anggap sukses jika tidak error
+    showToast('Berhasil diupload ke Google Drive! ✦', 'success');
+    setStatus('Upload selesai ✦');
+    
+  } catch(err) {
+    console.error('Upload error:', err);
+    showToast('Gagal upload: ' + err.message, 'error');
+    setStatus('Upload gagal · Coba lagi');
+  } finally {
+    btnDrive.disabled = false;
+  }
+}
+/* ================================================================
+   RESET
+================================================================ */
+function resetAll() {
+  state.shots = [];
+  state.resultBlob = null;
+  state.isCapturing = false;
+
+  for (let i = 0; i < CONFIG.PHOTO_COUNT; i++) {
+    const slot = document.getElementById(`slot-${i}`);
+    slot.classList.remove('filled');
+    const img = slot.querySelector('img');
+    if (img) img.remove();
+  }
+
+  resultCanvas.style.display = 'none';
+  resultPH.style.display = '';
+  btnPreview.disabled = true;
+  btnDownload.disabled = true;
+  btnDrive.disabled = true;
+  btnShoot.disabled = false;
+  countdownOvl.classList.remove('active');
+  loadingOvl.classList.remove('active');
+  setStatus('Di-reset · Siap mengambil foto baru');
+  showToast('Sesi direset ✦', 'info');
+}
+
+/* ================================================================
+   EVENT LISTENERS
+================================================================ */
+btnShoot.addEventListener('click', startCapture);
+btnPreview.addEventListener('click', renderPhotostrip);
+btnReset.addEventListener('click', resetAll);
+btnDownload.addEventListener('click', downloadPNG);
+btnDrive.addEventListener('click', uploadToDrive);
+
+/* ================================================================
+   INIT (auto-try camera silently)
+================================================================ */
+(async () => {
+  // Show permission screen first; it will hide after successful init
+  try {
+    const perm = await navigator.permissions.query({ name: 'camera' });
+    if (perm.state === 'granted') {
+      await initCamera();
+    }
+    // else: show permission screen for user to click
+  } catch(e) {
+    // permissions API not supported; wait for user click
+  }
+})();
+</script>
+</body>
+</html>
